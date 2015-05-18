@@ -1,4 +1,9 @@
+var isFullsize;
+
 $(function($){
+    // display current disk usage in footer
+    $('.footer').html('Total usage: ' + foldersize);
+
 	//dropdown menu
     $("ul.dropdown li").hover(function(){
         $(this).addClass("hover");
@@ -11,12 +16,13 @@ $(function($){
        $('ul.sub_menu').css('visibility', 'hidden');
     });
 
-    setMaxHeight();
+    // setMaxHeight();
     //parse the link in the url
     var imageLink = document.URL.substr(document.URL.indexOf('?/')+2);
 
     if(imageLink != undefined) {
 	    var title = imageLink.replace('/', '');
+        title = urldecode(title);
 
 	    var titleWithoutFileType = title.substr(0, title.lastIndexOf("."));
 	    var fileType = title.substr(title.lastIndexOf("."));
@@ -52,18 +58,73 @@ $(function($){
 	    } else {
 	    	//unsupported file type
 	    	$('#main-notsupported').css('display', 'block');
+            $('.extension').html(fileTypeLowered);
+            $('#main-notsupported .filename').html(titleWithoutFileType);
+            $('#main-notsupported .filetype').html(fileType.toLowerCase());
 	    	console.log("file type not supported ", fileType.toLowerCase());
 	    }
     }
 
 });
-$(window).resize(function() {
+
+$('#main-image').load(function() {
     setMaxHeight();
 });
+
+$(window).resize(function() {
+    // resize only if image is not fullsize
+    if(!isFullsize) {
+        setMaxHeight();
+    }
+});
+
+function bindImageZoom() {
+    // fullzise image
+    // enable this only if image is too big
+    if ( $('#main-image')[0].naturalHeight != $('#main-image')[0].height ) {
+
+        if(!isFullsize) {
+            // display zoom in icon
+            $('#main-image').addClass('zoom-in');
+            $('#main-image').removeClass('zoom-out');
+        }
+
+        // zoom-in / out on click
+        $('#main-image').click(function () {
+            if (isFullsize) {
+                $('#main-image').css('max-height', ($(window).height() - 140));
+                $('#main-image').addClass('zoom-in');
+                $('#main-image').removeClass('zoom-out');
+                isFullsize = false;
+            } else {
+                $('#main-image').css('max-height', 'none');
+                $('#main-image').addClass('zoom-out');
+                $('#main-image').removeClass('zoom-in');
+                isFullsize = true;
+            }
+        });
+    // no need for zoom
+    } else {
+        $('#main-image').off('click');
+        $('#main-image').removeClass('zoom-out');
+        $('#main-image').removeClass('zoom-in');
+        isFullsize = false;
+    }
+}
+
 function setMaxHeight() {
 
-	$('#main-image').css('max-height', ($(window).height() - 140));
-	$('#main-video').css('max-height', ($(window).height() - 140));
+    $('#main-image').css('max-height', ($(window).height() - 140));
+    $('#main-video').css('max-height', ($(window).height() - 140));
+
+    // check if image zoom needs to be enabled
+    // isFullsize = false;
+    bindImageZoom();
+}
+
+// URLDecode filenames
+function urldecode(str) {
+    return decodeURIComponent((str+'').replace(/\+/g, '%20'));
 }
 
 /*

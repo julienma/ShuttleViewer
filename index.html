@@ -10,6 +10,8 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
+        <script type="text/javascript" src="theme/bin/foldersize.js"></script>
+
         <link rel="stylesheet" href="theme/css/normalize.min.css">
         <link rel="stylesheet" href="theme/css/main.css">
         <link rel="stylesheet" href="theme/css/video-js.css">
@@ -36,7 +38,12 @@
                     <video id="main-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="none">
                         <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
                     </video>
-                    <p id="main-notsupported">File type not supported. <a href="#" class="direct-link">Download instead</a>.</p>
+                    <div id="main-notsupported">
+                        <div class="file-type">
+                            <span class="extension"></span>
+                        </div>
+                        <a id="main-button" href="#" class="direct-link"><strong><span class="filename">HerissonGazon</span></strong><span class="filetype">.pdf</span></a>
+                    </div>
                 </div>
 
             </div>
